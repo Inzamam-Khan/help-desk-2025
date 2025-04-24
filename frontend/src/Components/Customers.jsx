@@ -1,8 +1,8 @@
 
 
 
-import {Link} from 'react-router-dom'
-import { FaEye } from "react-icons/fa";
+import {Link,} from 'react-router-dom'
+import { FaEye, FaPlus } from "react-icons/fa";
 
 
 const Customers = () => {
@@ -66,7 +66,16 @@ const Customers = () => {
 
 
             <div className="flex justify-between items-center mb-6">
-            <div className="text-xl font-semibold px-2 text-[#ec4899]">Customers</div>
+            <div className="text-xl font-semibold px-2 text-[#ec4899]  flex items-center justify-center  gap-8">Customers
+           
+            <Link to="/admin/create-customer" className="" title='Create Customer'>
+            <FaPlus  className="fill-white" size={16} />
+            {/* <span className=" -translate-x-1/2  mb-2 px-2 py-1 text-xs rounded opacity-100 group-hover:opacity-100 transition text-white">
+    Create User
+  </span> */}
+            </Link>
+            </div>
+
             <input className="w-1/4 border px-4 rounded-lg border-gray-600" placeholder="Search by id/user" />
           </div>
 

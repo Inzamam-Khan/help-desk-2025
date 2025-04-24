@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useGetMyNotes } from "../Hooks/Notes/useGetNotes";
+
 
 
 
@@ -12,6 +15,23 @@ const data = [
 ];
 
 export default function Admindashboard() {
+
+const tickets=useSelector(state=>state.TicketReducer)
+
+
+const notes=useSelector(state=>state.NotesReducer)
+
+  
+
+const {getMyNotes}=useGetMyNotes()
+
+useEffect(()=>{
+  getMyNotes()
+},[])
+
+
+
+
   return (
     <div className=" bg-gray-900 min-h-screen w-full border-red-500  p-6 text-gray-300">
       <div className="grid grid-cols-6 gap-6  ">
@@ -49,38 +69,27 @@ export default function Admindashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    
-                    <tr className=" border-red-500 h-10 ">
+                    {
+                      tickets?.map(ticket=>(
+<tr className=" border-red-500 h-10 ">
                       
-                  <Link to="/admin/view-ticket/123" className="cursor-pointer text-blue-400 underline">
-                  <td>INC4568</td>
-                  </Link>
+                      <Link to={`/admin/view-ticket/${ticket?._id}`} className="cursor-pointer text-blue-400 underline">
+                      <td>{ticket?._id}</td>
+                      </Link>
+                      
+                          <td>{new Date(ticket?.createdAt)?.toLocaleTimeString()}</td>
+                          <td>{ticket?.subject}</td>
+                          <td>{ticket.createdBy}</td>
+                          <td>{ticket.status}</td>
+                          <td><span className="bg-green-100 text-green-700 px-2 py-1 rounded">{new Date(ticket?.updatedAt)?.toLocaleTimeString()}</span></td>
+                        </tr>
+
+                      ))
+                    }
+                    
+
                   
-                      <td>04/12/23</td>
-                      <td>Error when starting Microsoft Word</td>
-                      <td>Marso.27</td>
-                      <td>WIP</td>
-                      <td><span className="bg-green-100 text-green-700 px-2 py-1 rounded">23min</span></td>
-                    </tr>
-
-                    <tr className=" border-red-500 h-10 ">
-                      <td>INC4568</td>
-                      <td>04/12/23</td>
-                      <td>Error when starting Microsoft Word</td>
-                      <td>Marso.27</td>
-                      <td>WIP</td>
-                      <td><span className="bg-green-100 text-green-700 px-2 py-1 rounded">23min</span></td>
-                    </tr>
-
-                    <tr className=" border-red-500 h-10 hover:bg-gray-800 cursor-pointer">
-                      <td>INC4568</td>
-                      <td>04/12/23</td>
-                      <td>Error when starting Microsoft Word</td>
-                      <td>Marso.27</td>
-                      <td>WIP</td>
-                      <td><span className="bg-green-100 text-green-700 px-2 py-1 rounded">23min</span></td>
-                    </tr>
-                    {/* <!-- Add more rows as needed --> */}
+                  
                   </tbody>
                 </table>
               </div>
@@ -91,19 +100,39 @@ export default function Admindashboard() {
                 <div className="font-semibold text-lg mb-2 pl-2">Unassigned Tickets</div>
                 {/* 3 */}
                 
-                <div className="text-sm space-y-2  px-2">
+
+{tickets?.map((ticket)=>{
+  if(ticket?.assignedTo ==null){
+    return (
+      <div className="text-sm space-y-2  px-2">
                   <div className="flex justify-between items-center">
                    
-                    <div>
-                      <div className="font-medium">RITM4579</div>
-                      <div className="text-xs text-gray-500">Need assistance with PowerPoint</div>
+                    <div >
+                     <Link to={`/admin/view-ticket/${ticket?._id}`} className="cursor-pointer text-blue-400 underline">
+                  <td>{ticket?._id}</td>
+                  </Link>
+                      <div className="text-xs text-gray-500">{ticket?.subject}</div>
                     </div>
-                    <select className="border border-gray-600 bg-gray-900  rounded px-2 py-1 text-sm">
+
+
+                    <div>
+                      <div className="font-medium">Date created At:</div>
+                      <div className="text-xs text-gray-500"> {new Date(ticket?.createdAt).toLocaleTimeString()}</div>
+                    </div>
+
+                    {/* <select className="border border-gray-600 bg-gray-900  rounded px-2 py-1 text-sm">
                       <option>Select Technician</option>
                       <option>Levinson.2</option>
-                    </select>
+                    </select> */}
                   </div>
                 </div>
+
+    )
+  }
+
+})}
+
+                
               </div>
             </div>
           </div>
@@ -125,39 +154,48 @@ export default function Admindashboard() {
               <div className=" mx-auto">
                 <div className=" flex items-center gap-4 justify-start font-semibold text-lg mb-2 px-2 mx-auto  text-center   text-[#6366f1]">My Notes
 
-                <button size="sm" className=" cursor-pointer"><FaPlus  className="fill-white" size={16} /> </button>
+                <Link to="/create-note" size="sm" className=" cursor-pointer">
+                  <FaPlus  className="fill-white" size={16} />
+                   </Link>
                 </div>
                 
-
-                  <div className="text-sm space-y-2 border-b border-gray-600 pb-1 px-2 mb-2">
-                  <div className="flex justify-between items-center">
-                   
-
-
-
-
+{/* container */}
+                  <div className="text-sm space-y-2   border-red-500 pb-1 px-2 mb-2">
+{
+  notes?.map((note)=>(
+<Link  to={`/view-note/${note?._id}`}
+                  className="cursor-pointer hover:bg-gray-800  flex justify-between items-center  border-blue-500">
                     <div>
-                      <div className="font-medium">RITM4579</div>
-                      <div className="text-xs text-gray-500">Need assistance with PowerPoint</div>
+                      <div className="font-medium  border-red-500">{note?.title}</div>
+                      <div className="text-xs text-gray-500">{note?.description}</div>
                     </div>
-
-
                     <div>
                       <div className="font-medium">Created At</div>
-                      <div className="text-xs text-gray-500">{new Date().toLocaleTimeString()}</div>
+                      <div className="text-xs text-gray-500">{new Date(note?.createdAt).toLocaleTimeString()}</div>
                     </div>
+<div className="border capitalize border-gray-600 bg-gray-900 rounded px-2 py-1 text-sm">
+  {note?.status}
+</div>
+                  </Link>
+  ))
+}
+
+{/* note item */}
+                  
+
+               
+
+
+               
+
+
+               
 
 
 
 
 
 
-                    <select className="border border-gray-600 bg-gray-900 rounded px-2 py-1 text-sm">
-                      <option> Pending</option>
-                      <option> Done</option>
-                      <option> Working</option>
-                    </select>
-                  </div>
                 </div>
 
 

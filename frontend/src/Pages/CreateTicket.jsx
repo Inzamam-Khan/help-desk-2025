@@ -1,15 +1,18 @@
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useCreateTicket } from '../Hooks/TicketsHooks/useCreateTicket';
 // import { createTicket } from '../redux/actions';
 
 export default function CreateTicketForm(){
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    title: '',
+    subject: '',
     description: '',
-    category: 'Bug',
-  });
+    category: '',
+    priority:''
+  });               
+  const {createTicket}=useCreateTicket()                                               
 
   const categories = ['Bug', 'Feature Request', 'Support', 'Other'];
 
@@ -19,8 +22,8 @@ export default function CreateTicketForm(){
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createTicket({ ...formData, id: Date.now() }));
-    setFormData({ title: '', description: '', category: 'Bug' });
+    createTicket({ ...formData, id: Date.now() })
+    // setFormData({ subject: '', description: '', category: '' ,pritority:''});
   };
 
   return (
@@ -28,11 +31,11 @@ export default function CreateTicketForm(){
       <h2 className="text-xl font-bold mb-4">Create New Ticket</h2>
 
       <div className="mb-3">
-        <label className="block mb-1">Title</label>
+        <label className="block mb-1">subject</label>
         <input
           type="text"
-          name="title"
-          value={formData.title}
+          name="subject"
+          value={formData.subject}
           onChange={handleChange}
           className="w-full border p-2 rounded"
           required
@@ -56,16 +59,30 @@ export default function CreateTicketForm(){
           name="category"
           value={formData.category}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded bg-gray-900"
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
       </div>
+      <div className="mb-3">
+        <label className="block mb-1">Priority</label>
+        <select
+          name="priority"
+          value={formData.priority}
+          onChange={handleChange}
+          className="w-full border p-2 rounded bg-gray-900"
+        >
+          
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select>
+      </div>
 
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-        Submit
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded  w-full">
+        Create Ticket
       </button>
     </form>
   );

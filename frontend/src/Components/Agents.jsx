@@ -3,7 +3,7 @@
 
 
 import {Link} from 'react-router-dom'
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaPlus } from "react-icons/fa";
 
 
 const Agents = () => {
@@ -87,7 +87,22 @@ const Agents = () => {
 
 
             <div className="flex justify-between items-center mb-6">
-            <div className="text-xl font-semibold px-2 text-[#10b981]">Agents</div>
+            <div className="text-xl font-semibold px-2 text-[#10b981] 
+             flex items-center justify-center  gap-8">Agents
+
+
+
+<Link to="/admin/create-agent" className="" title='Create Agent'>
+            <FaPlus  className="fill-white" size={16} />
+            {/* <span className=" -translate-x-1/2  mb-2 px-2 py-1 text-xs rounded opacity-100 group-hover:opacity-100 transition text-white">
+    Create User
+  </span> */}
+            </Link>
+
+
+
+
+            </div>
             <input className="w-1/4 border px-4 rounded-lg border-gray-600" placeholder="Search by id/user" />
           </div>
 
@@ -118,7 +133,7 @@ const Agents = () => {
                 <td>{customer.ticketsAssigned}</td>
                 <td>{customer.ticketsCompleted}</td>
                 {/* <td>{new Date(customer.createdAt).toLocaleDateString()}</td> */}
-                 <Link to={`/admin/view-agent/123`} className='relative rounded-lg hover:bg-gray-800  top-3 px-4 left-5 '>
+                 <Link to={`/admin/edit-agent/123`} className='relative rounded-lg hover:bg-gray-800  top-3 px-4 left-5 '>
                  <span>View</span>  </Link>
                 
                 {/* <td className={`${customer.status=="pending"?`text-red-500`:`${customer.status=='open'?`text-blue-500`:`text-green-500`}`} capitalize`}>{customer.status}</td> */}

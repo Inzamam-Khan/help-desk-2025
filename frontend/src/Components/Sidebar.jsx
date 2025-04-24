@@ -14,10 +14,12 @@ export default function Sidebar(){
     const dispatch=useDispatch()
     
     const selected=useSelector(state=>state.SelectedMenu)
+    const authUser=useSelector(state=>state.UserReducer)
+    const isAdmin=authUser?.role=="admin"
    
   
     return(
-        <motion.div className={`h-full relative z-10 transition-all border border-green-500 
+        <motion.div className={`h-full relative z-10 transition-all  border-green-500 
         duration-300 ease-in-out flex-shrink-0 ${sidebarOpen ? `w-54`:`w-20`}`} 
         animate={{width:sidebarOpen ? 256 :80}}>
 
@@ -36,31 +38,44 @@ export default function Sidebar(){
 
 
                 <nav className="mt-8  flex-grow">
-                    {SIDEBAR_ITEMS.map((item,index)=>(
+                    {SIDEBAR_ITEMS.map((item,index)=>
                         
                         // <Link to={item.link} key={index}>
+                       
                         
-                        <motion.div className={` flex items-center cursor-pointer p-2  border-red-500 text-sm font-medium 
-                        rounded-lg hover:bg-gray-700  transition-colors mb-2 ${selected == item.link? `bg-gray-900`:``}`}
-                        onClick={()=>dispatch(setMenu(item.link))}
-                        >
+                        
 
-                                <span style={{color:item.color,minWidth:'20px',fontSize:"22px",}}>{item.icon}  </span>
 
-                                <AnimatePresence>
+                               ( <motion.div className={` flex items-center cursor-pointer p-2  border-red-500 text-sm font-medium 
+                                    rounded-lg hover:bg-gray-700  transition-colors mb-2 ${selected == item.link? `bg-gray-900`:``}`}
+                                    onClick={()=>dispatch(setMenu(item.link))}
+                                    >
+            
+                                            <span style={{color:item.color,minWidth:'20px',fontSize:"22px",}}>{item.icon}  </span>
+            
+                                            <AnimatePresence>
+                                               
+                                               {sidebarOpen && <motion.span className="ml-4  whitespace-nowrap"
+                                                initial={{opacity:0,width:0}}
+                                                animate={{opacity:1,width:1}}
+                                                exit={{opacity:0,width:0}}
+                                                transition={{duration:0.2,delay:0.3}}>
+                                                    {item.name}
+                                                </motion.span> }
+                                                
+                                            </AnimatePresence>
+                                    </motion.div>
+)
+                        
+                    
+                    
+                    
                                    
-                                   {sidebarOpen && <motion.span className="ml-4  whitespace-nowrap"
-                                    initial={{opacity:0,width:0}}
-                                    animate={{opacity:1,width:1}}
-                                    exit={{opacity:0,width:0}}
-                                    transition={{duration:0.2,delay:0.3}}>
-                                        {item.name}
-                                    </motion.span> }
-                                    
-                                </AnimatePresence>
-                        </motion.div>
+                    
+                    
+                    
                         // </Link>
-                    ))}
+                    )}
                 </nav>
                
             </div>
