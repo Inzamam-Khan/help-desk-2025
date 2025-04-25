@@ -3,6 +3,7 @@ import { useState } from "react"
 import {toast} from 'react-hot-toast'
 import { useDispatch } from "react-redux"
 import {addNotes} from '../../Store/Actions/notesActions'
+import { useNavigate } from "react-router-dom"
 
 // import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +13,7 @@ export function useCreateNotes(){
     const [loading,setLoading]=useState(false)
     // const [notes,setNotes]=useState(null)
     const dispatch=useDispatch()
+    const navigate=useNavigate()
     
     
 
@@ -35,6 +37,7 @@ const createNotes=async(payload)=>{
         {   
             toast.success("Note created Successfully")
             dispatch(addNotes(newNote))
+            navigate("/")
             
             
             // localStorage.setItem("authInfo",JSON.stringify(user))

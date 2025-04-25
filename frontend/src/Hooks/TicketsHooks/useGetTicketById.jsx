@@ -11,7 +11,7 @@ export function useGetTicketById(){
 
     
     const [loading,setLoading]=useState(false)
-    // const [tickets,setTickets]=useState([])
+    const [editTicket,setEditTicket]=useState([])
     
     const dispatch=useDispatch()  
 
@@ -29,6 +29,7 @@ const getTicketById=async(id)=>{
         else
         {  
             // setTickets(myTickets);
+            setEditTicket(ticket)
             dispatch(setTickets(ticket))
             
             
@@ -63,7 +64,7 @@ const getTicketById=async(id)=>{
 }
 
 
-return{getTicketById,loading}
+return{getTicketById,editTicket,loading}
 
 
 

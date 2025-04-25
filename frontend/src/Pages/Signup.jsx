@@ -11,14 +11,14 @@ export function Signup() {
 
     const [isView,setIsView]=useState(false)
     
-    const{signup,user,loading}=useSignup()
+    const{signup,loading}=useSignup()
 
     const [inputs,setInputs]=useState({
         email:"",
         name:"",
         password:""
     })
-    console.log(user)
+    
   return (
     <motion.div
     initial={{opacity:0,y:-20}}

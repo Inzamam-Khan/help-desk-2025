@@ -20,6 +20,8 @@ const tickets=useSelector(state=>state.TicketReducer)
 
 
 const notes=useSelector(state=>state.NotesReducer)
+const auth=useSelector(state=>state.UserReducer)
+
 
   
 
@@ -42,7 +44,7 @@ useEffect(()=>{
         <main className="col-span-8 space-y-6  ">
           {/* Top Bar */}
           <div className="flex justify-between items-center">
-            <div className="text-xl font-semibold px-2 text-[#6366f1]">Dashboard</div>
+            <div className="text-xl font-semibold px-2 text-[#6366f1] capitalize">{auth?.role} Dashboard</div>
             <input className="w-1/4 border px-4 rounded-lg border-gray-600" placeholder="Search..." />
           </div>
 
@@ -68,7 +70,7 @@ useEffect(()=>{
                       <th className="text-left">Last Update</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className=" overflow-auto">
                     {
                       tickets?.map(ticket=>(
 <tr className=" border-red-500 h-10 ">
@@ -151,7 +153,7 @@ useEffect(()=>{
           {/* Bottom Sections */}
           <div className="grid grid-cols-1 gap-4  border-green-500">
             <div className="mx-auto  w-full">
-              <div className=" mx-auto">
+              <div className=" mx-auto  overflow-auto">
                 <div className=" flex items-center gap-4 justify-start font-semibold text-lg mb-2 px-2 mx-auto  text-center   text-[#6366f1]">My Notes
 
                 <Link to="/create-note" size="sm" className=" cursor-pointer">
@@ -160,7 +162,7 @@ useEffect(()=>{
                 </div>
                 
 {/* container */}
-                  <div className="text-sm space-y-2   border-red-500 pb-1 px-2 mb-2">
+                  <div className="text-sm space-y-2   border-red-500 pb-1 px-2 mb-2 overflow-auto ">
 {
   notes?.map((note)=>(
 <Link  to={`/view-note/${note?._id}`}

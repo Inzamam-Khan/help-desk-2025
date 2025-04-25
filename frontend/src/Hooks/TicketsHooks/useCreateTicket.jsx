@@ -3,6 +3,7 @@ import { useState } from "react"
 import {toast} from 'react-hot-toast'
 import { useDispatch } from "react-redux"
 import {addTicket} from '../../Store/Actions/ticketActions'
+import { useNavigate } from "react-router-dom"
 
 // import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
@@ -13,7 +14,7 @@ export function useCreateTicket(){
     // const [notes,setNotes]=useState(null)
     const dispatch=useDispatch()
     
-    
+    const navigate=useNavigate()
 
 const createTicket=async(payload)=>{
     
@@ -35,7 +36,7 @@ const createTicket=async(payload)=>{
         {   
             toast.success("Ticket created Successfully")
             dispatch(addTicket(newTicket))
-            
+            navigate("/")
             
             // localStorage.setItem("authInfo",JSON.stringify(user))
             

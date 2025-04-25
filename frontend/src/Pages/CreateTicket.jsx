@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useCreateTicket } from '../Hooks/TicketsHooks/useCreateTicket';
 // import { createTicket } from '../redux/actions';
 
+
 export default function CreateTicketForm(){
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ export default function CreateTicketForm(){
     category: '',
     priority:''
   });               
-  const {createTicket}=useCreateTicket()                                               
+  const {createTicket}=useCreateTicket() 
 
   const categories = ['Bug', 'Feature Request', 'Support', 'Other'];
 
@@ -23,6 +24,8 @@ export default function CreateTicketForm(){
   const handleSubmit = (e) => {
     e.preventDefault();
     createTicket({ ...formData, id: Date.now() })
+    
+    
     // setFormData({ subject: '', description: '', category: '' ,pritority:''});
   };
 

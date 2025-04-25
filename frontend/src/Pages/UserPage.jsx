@@ -17,7 +17,31 @@ const UserPage = () => {
 
   const selectedMenu=useSelector(state=>state.SelectedMenu)
 const authUser=useSelector(state=>state.UserReducer)
+const tickets=useSelector(state=>state.TicketReducer)
 
+console.log(tickets)
+const openTickets=tickets.filter((ticket)=>{
+  if(ticket.status == "open")
+  {
+    return ticket
+  }
+})
+
+const closedTicket=tickets.filter((ticket)=>{
+  if(ticket.status == "closed")
+  {
+    return ticket
+  }
+})
+
+const inProgressTickets=tickets.filter((ticket)=>{
+  if(ticket.status == "in-progress")
+  {
+    return ticket
+  }
+})
+
+const efficiency=closedTicket.length/ tickets.length
 
 const dispatch=useDispatch()
 
@@ -64,8 +88,8 @@ useEffect(()=>{
 <div className='flex gap-2 items-center'>
     <span> <FaBell className='fill-[#10b981]'/></span>
 
-  Active 
-  <span className='font-semibold '> 100</span></div>
+  Open
+  <span className='font-semibold '> {openTickets.length}</span></div>
   
   </div>
 
@@ -78,8 +102,8 @@ useEffect(()=>{
 
 
   <span><MdPending className='fill-[#ec4899]'/></span>
-  Pending
-  <span className='font-semibold '> 200</span></div>
+  Inprogress
+  <span className='font-semibold '> {inProgressTickets.length}</span></div>
   
   </div>
 
@@ -90,11 +114,9 @@ useEffect(()=>{
 <div className='flex gap-2 items-center '>
 
 <span><MdOutlineSettingsSuggest className='fill-[#6366f1]'/></span>
-  Efficiency<span className='font-semibold '> 300</span>
+  Efficiency<span className='font-semibold '>{efficiency}</span>
   </div>
 
-  
-  
   </div>
 
       </div>

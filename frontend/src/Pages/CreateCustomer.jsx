@@ -1,14 +1,15 @@
 import { useState } from 'react';
+import { useCreateUsert } from '../Hooks/Customers/useCreateUser';
 
 const CreateCustomer = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: '',
     role: '', // default/fixed role
   });
   
-
+  const {createUser}=useCreateUsert()
   const handleChange = (e) => {
     setFormData({ 
       ...formData, 
@@ -18,7 +19,7 @@ const CreateCustomer = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitting:', formData);
+    createUser(formData);
     // Call your API here to create the user
   };
 
@@ -27,11 +28,11 @@ const CreateCustomer = () => {
       <h2 className="text-2xl font-semibold text-center">Create Customer</h2>
 
       <div>
-        <label className="block mb-1 text-sm font-medium">Username</label>
+        <label className="block mb-1 text-sm font-medium">Name</label>
         <input
           type="text"
-          name="username"
-          value={formData.username}
+          name="name"
+          value={formData.name}
           onChange={handleChange}
           className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400"
           required

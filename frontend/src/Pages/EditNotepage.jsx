@@ -6,12 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useGetNoteById } from '../Hooks/Notes/useGetNoteById';
 import { useParams } from 'react-router-dom';
 import { useUpdateNote } from '../Hooks/Notes/useUpdateNote';
+import { useDeleteNoteById } from '../Hooks/Notes/useDeleteNoteById';
 
 
 
 export default function EditNotepage(){
   const dispatch = useDispatch();
   const {updateNote}=useUpdateNote()
+  const {deleteNoteById}=useDeleteNoteById()
   const {id} =useParams()
   const [formData, setFormData] = useState({
     title: '',
@@ -46,6 +48,7 @@ const {getNoteById}=useGetNoteById()
     },[])
 
 const note=useSelector(state=>state.NotesReducer)
+console.log(note)
 
 
 
@@ -128,18 +131,17 @@ const note=useSelector(state=>state.NotesReducer)
 
       
 
+      <div className="w-full   flex items-center justify-center gap-8 ">
 
-
-
-      <div className=" w-full flex items-center justify-center gap-8 "
+      <div className="  w-full  "
             onClick={()=>setIsEditOpen(!isEditOpen)}>
 
 {
   isEditOpen? (
-    <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded cursor-pointer">
+    <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded cursor-pointer">
         Cancel 
       </button>
-  ):(<button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded cursor-pointer">
+  ):(<button type="submit" className="w-full bg-blue-500 text-white py-2 rounded cursor-pointer">
     Edit 
   </button>)
 }
@@ -150,11 +152,28 @@ const note=useSelector(state=>state.NotesReducer)
 
 
 
+
+
+  </div>
+
+
+  <button 
+      onClick={()=>deleteNoteById(id)}
       
-      <button type="submit" className="w-1/2 bg-red-600 text-white py-2 rounded hover:bg-red-700 cursor-pointer">
+      type="submit" className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 cursor-pointer">
         Delete
       </button>
-  </div>
+
+
+
+
+      </div>
+
+
+
+  
+      
+ 
 
 
 

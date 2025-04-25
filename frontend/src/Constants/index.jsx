@@ -15,25 +15,29 @@ export const SIDEBAR_ITEMS = [
         icon: <MdSpaceDashboard />,
         color: '#6366f1',
         link: 'dashboard',
+        roles: ["admin", "agent","customer"]
 
     },
     {
         name: "Tickets",
         icon: <IoTicketSharp />,
         color: '#BB5CF6',
-        link: 'tickets'
+        link: 'tickets',
+        roles: ["admin","agent","customer"]
     },
     {
         name: "Customers",
         icon: <BiUser />,
         color: '#ec4899',
-        link: 'customers'
+        link: 'customers',
+        roles: ["agent", "admin"]
     },
     {
         name: "Agents",
         icon: <RiCustomerService2Line />,
         color: '#10b981',
-        link: 'agents'
+        link: 'agents',
+        roles: ["admin"]
     },
     {
         name: "Knowledge Base",

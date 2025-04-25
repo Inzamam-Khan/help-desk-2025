@@ -1,6 +1,7 @@
 
 import {Link} from 'react-router-dom'
 import { FaEye, FaPlus } from "react-icons/fa";
+import { useSelector } from 'react-redux';
 
 
 const Tickets = () => {
@@ -41,7 +42,8 @@ const Tickets = () => {
       },
       // ... More ticket objects here
     ];
-  
+  const myTickets=useSelector(state=>state.TicketReducer)
+  console.log(myTickets)
     const getStatusColor = (status) => {
       if (status === "None" || status === "2 days") return "bg-red-100 text-red-600";
       if (status.includes("day")) return "bg-yellow-100 text-yellow-600";
@@ -76,24 +78,26 @@ const Tickets = () => {
               <th># id</th>
               <th>Date</th>
               <th>Subject</th>
-              <th>User</th><th>Service</th>
+              <th>Created by</th>
               <th>Assigned</th><th>Status</th>
               
             </tr>
           </thead>
-          <tbody>
-            {tickets.map((ticket, index) => (
+          <tbody className=' overflow-auto'>
+            {myTickets.map((ticket, index) => (
               <tr key={index} className="border-b  border-gray-800 h-10 cursor-pointer  hover:bg-gray-800">
                 {/* <td>{ticket.number}</td> */}
                 <td>
-                    <Link to="/admin/view-ticket/123" className="cursor-pointer text-blue-400 underline">{ticket.number}</Link>
+                    <Link to={`/admin/view-ticket/${ticket?._id}`} className="cursor-pointer text-blue-400 underline">{ticket._id}</Link>
                     </td>
 
-                <td>{ticket.date}</td>
+                <td>{new Date(ticket.createdAt).toLocaleTimeString()}</td>
                 <td>{ticket.subject}</td>
-                <td>{ticket.user}</td>
+                <td>{ticket.
+createdBy
+}</td>
               
-                <td>{ticket.service}</td>
+                {/* <td>{ticket.service}</td> */}
                 <td > {ticket.assigned?ticket.assigned : "###"} </td>
                 
                 <td className={`${ticket.status=="pending"?`text-red-500`:`${ticket.status=='open'?`text-blue-500`:`text-green-500`}`} capitalize`}>{ticket.status}</td>

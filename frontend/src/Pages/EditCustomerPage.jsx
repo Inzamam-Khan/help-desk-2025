@@ -1,7 +1,11 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useGetUserbyId } from "../Hooks/Customers/useGetUserById";
+import { useGetMyTickets } from "../Hooks/TicketsHooks/useGetMyTickets";
+import { useSelector } from "react-redux";
+import { useUpdateUserById } from "../Hooks/Customers/useUpdateUser";
 
 const tickets = [
   {
@@ -53,6 +57,14 @@ export default function CustomerDetailsPage({ onSubmit }) {
     role:""
   });
   const [isEditOpen,setIsEditOpen]=useState(false)
+  const {id}=useParams()
+
+  const {getUserById,user}=useGetUserbyId()
+  const myTickets=useSelector(state=>state.TicketReducer)
+
+  const {getMyTickets}=useGetMyTickets()
+  const {updateUserById}=useUpdateUserById()
+  console.log(myTickets)
 
   const handleChange = (e) => {
     const { username, value } = e.target;
@@ -61,7 +73,7 @@ export default function CustomerDetailsPage({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    updateUserById(id,formData);
     setFormData({
       username: "",
       email: "",
@@ -71,6 +83,13 @@ export default function CustomerDetailsPage({ onSubmit }) {
       
     });
   };
+
+
+
+  useEffect(()=>{
+getUserById(id)
+getMyTickets()
+  },[])
 
   return (<div className="flex items-start justify-center ">
 
@@ -96,12 +115,12 @@ className="min-h-screen bg-gray-900 p-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             <div>
-              <h2 className="text-xl font-bold">customer id</h2>
+              <h2 className="text-xl font-bold">{user?._id}</h2>
               <div className="flex items-center gap-4 mt-2">
   
                 <img src="https://i.pravatar.cc/40?img=5" alt="Arlene McCoy" className="rounded-full" />
-                <span className="font-medium">Arlene McCoy</span>
-                <span className=" text-sm bg-gray-900 px-2 py-1 rounded-full">Role:<strong> User</strong></span>
+                <span className="font-medium">{user?.name}</span>
+                <span className=" text-sm bg-gray-900 px-2 py-1 rounded-full capitalize">Role:<strong> {user?.role}</strong></span>
   
                 <div className="  ml-auto flex items-center w-1/3 gap-3">
            
@@ -129,9 +148,9 @@ className="min-h-screen bg-gray-900 p-6">
             </div>
   
             <div>
-              <h3 className="text-md font-semibold mb-2 text-emerald-500">Active</h3>
-              <p><strong>Active Since:</strong> February 24, 2023</p>
-              <p>arlenemccoy@gmail.com</p>
+              <h3 className="text-md font-semibold mb-2 text-emerald-500">{user?.status}</h3>
+              <p><strong>Active Since:</strong> {new Date(user?.createdAt).toDateString()}</p>
+              <p>{user?.email}</p>
             </div>
   
             <div>
@@ -150,18 +169,18 @@ className="min-h-screen bg-gray-900 p-6">
               </tr>
             </thead>
             <tbody>
-              {tickets.map((ticket, index) => (
+              {myTickets.map((ticket, index) => (
                 <tr key={index} className="border-b  border-gray-800 h-10  ">
                  
                   <td>
-                    <Link to="/admin/view-ticket/123" className="cursor-pointer text-blue-400 underline">{ticket.number}</Link>
+                    <Link to={`/admin/view-ticket/${ticket?._id}`} className="cursor-pointer text-blue-400 underline">{ticket?._id}</Link>
                     </td>
-                  <td>{ticket.date}</td>
+                  <td>{new Date(ticket?.createdAt).toLocaleTimeString()}</td>
                   <td>{ticket.subject}</td>
                   
                 
-                  <td>{ticket.service}</td>
-                  <td > {ticket.assigned?ticket.assigned : "###"} </td>
+                  <td>{ticket?.category}</td>
+                  <td > {ticket.assignedTo?ticket?.assignedTo : "###"} </td>
                   
                   <td className={`${ticket.status=="pending"?`text-red-500`:`${ticket.status=='open'?`text-blue-500`:`text-green-500`}`} capitalize`}>{ticket.status}</td>
                 

@@ -4,82 +4,37 @@
 
 import {Link} from 'react-router-dom'
 import { FaEye, FaPlus } from "react-icons/fa";
+import {useSelector} from 'react-redux'
+import { useGetAllUsers } from '../Hooks/Customers/useGetAllUsers';
+import { useEffect } from 'react';
+import { useGetMyTickets } from '../Hooks/TicketsHooks/useGetMyTickets';
 
 
 const Agents = () => {
- const agents=   [
-        {
-          "id": "101",
-          "name": "Olivia Martinez",
-          "email": "olivia.martinez@example.com",
-          "username": "oliviam",
-          "password": "hashedpassword123",
-          "role": "customer_service_agent",
-          "phone": "+1-202-555-0123",
-          "department": "Technical Support",
-          "createdAt": "2024-04-01T09:10:00Z",
-          "status": "active",
-          "ticketsAssigned": 23,
-          "ticketsCompleted": 18
-        },
-        {
-          "id": "102",
-          "name": "Liam Thompson",
-          "email": "liam.thompson@example.com",
-          "username": "liamt",
-          "password": "hashedpassword123",
-          "role": "customer_service_agent",
-          "phone": "+1-202-555-0176",
-          "department": "Billing",
-          "createdAt": "2024-04-02T11:45:00Z",
-          "status": "active",
-          "ticketsAssigned": 15,
-          "ticketsCompleted": 14
-        },
-        {
-          "id": "103",
-          "name": "Sophia Patel",
-          "email": "sophia.patel@example.com",
-          "username": "sophiap",
-          "password": "hashedpassword123",
-          "role": "customer_service_agent",
-          "phone": "+1-202-555-0199",
-          "department": "Account Management",
-          "createdAt": "2024-04-03T08:30:00Z",
-          "status": "inactive",
-          "ticketsAssigned": 9,
-          "ticketsCompleted": 9
-        },
-        {
-          "id": "104",
-          "name": "James Brown",
-          "email": "james.brown@example.com",
-          "username": "jamesb",
-          "password": "hashedpassword123",
-          "role": "customer_service_agent",
-          "phone": "+1-202-555-0148",
-          "department": "Technical Support",
-          "createdAt": "2024-04-04T13:15:00Z",
-          "status": "active",
-          "ticketsAssigned": 30,
-          "ticketsCompleted": 27
-        },
-        {
-          "id": "105",
-          "name": "Emma Wilson",
-          "email": "emma.wilson@example.com",
-          "username": "emmaw",
-          "password": "hashedpassword123",
-          "role": "customer_service_agent",
-          "phone": "+1-202-555-0134",
-          "department": "Customer Success",
-          "createdAt": "2024-04-05T10:50:00Z",
-          "status": "active",
-          "ticketsAssigned": 12,
-          "ticketsCompleted": 12
-        }
-      ]
+
+      const allUsers=useSelector(state=>state.AllUsersReducer)
       
+      const tickets=useSelector(state=>state.TicketReducer)
+      const completedTickets=tickets.filter((ticket)=>{
+        if(ticket.status=="closed")
+          return ticket
+      })
+      const agents=allUsers.filter((user)=>{
+        if(user?.role =="agent"){
+          return user
+        }})
+
+
+        const {getAllUsers}=useGetAllUsers()
+        const {getMyTickets}=useGetMyTickets()
+        console.log(agents)
+        console.log(tickets)
+        
+
+        useEffect(()=>{
+          getAllUsers()
+          getMyTickets()
+        },[])
 
   
     return (
@@ -112,28 +67,28 @@ const Agents = () => {
             <tr className="">
               <th># id</th>
               <th>Name</th>
-              <th>Username</th>
+              
               <th>Email</th>
-              <th>Department</th>
+              
                <th>Assigned</th>
               <th>Completed</th> 
               
             </tr>
           </thead>
           <tbody>
-            {agents.map((customer, index) => (
+            {agents.map((agent, index) => (
 
                 
               <tr key={index} className="border-b  border-gray-800 h-10  ">
-                <td>{customer.id}</td>
-                <td>{customer.name}</td>
-                <td>{customer.username}</td>
-                <td>{customer.email}</td>
-                <td>{customer.department}</td>
-                <td>{customer.ticketsAssigned}</td>
-                <td>{customer.ticketsCompleted}</td>
+                <td>{agent?._id}</td>
+                <td>{agent?.name}</td>
+                
+                <td>{agent?.email}</td>
+                
+                <td>{tickets?.length}</td>
+                <td>{completedTickets?.length}</td>
                 {/* <td>{new Date(customer.createdAt).toLocaleDateString()}</td> */}
-                 <Link to={`/admin/edit-agent/123`} className='relative rounded-lg hover:bg-gray-800  top-3 px-4 left-5 '>
+                 <Link to={`/admin/edit-agent/${agent?._id}`} className='relative rounded-lg hover:bg-gray-800  top-3 px-4 left-5 '>
                  <span>View</span>  </Link>
                 
                 {/* <td className={`${customer.status=="pending"?`text-red-500`:`${customer.status=='open'?`text-blue-500`:`text-green-500`}`} capitalize`}>{customer.status}</td> */}

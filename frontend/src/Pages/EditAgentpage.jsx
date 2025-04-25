@@ -1,49 +1,20 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useGetUserbyId } from "../Hooks/Customers/useGetUserById";
+import { useGetMyTickets } from "../Hooks/TicketsHooks/useGetMyTickets";
+import { useSelector } from "react-redux";
+import { useUpdateUserById } from "../Hooks/Customers/useUpdateUser";
 
-const tickets = [
-  {
-    number: "INC4568",
-    date: "04/12/23",
-    subject: "Can't sign into finance app",
-    user: "Marcos.27",
-    location: "Building 7",
-    room: "402",
-    service: "Software",
-    assigned: null,
-    status: "pending",
-    update: "None",
-  },   {
-    number: "INC4568",
-    date: "04/12/23",
-    subject: "Can't sign into finance app",
-    user: "Marcos.27",
-    location: "Building 7",
-    room: "402",
-    service: "Software",
-    assigned: "Hazer",
-    status: "open",
-    update: "None",
-  },   {
-    number: "INC4568",
-    date: "04/12/23",
-    subject: "Can't sign into finance app",
-    user: "Marcos.27",
-    location: "Building 7",
-    room: "402",
-    service: "Software",
-    assigned: "Robert",
-    status: "closed",
-    update: "None",
-  },
-  // ... More ticket objects here
-];
 
-export default function EditAgentForm({ onSubmit }) {
+
+export default function EditAgentForm({ onSubmit })
+ {
+
+  const {getUserById,user}=useGetUserbyId()
   const [formData, setFormData] = useState({
-    username: "",
+    name: user?.name|| "",
     email: "",
     phone: "",
     department: "",
@@ -53,15 +24,34 @@ export default function EditAgentForm({ onSubmit }) {
     role:""
   });
   const [isEditOpen,setIsEditOpen]=useState(false)
+  const {id}=useParams()
+
+  
+  const {getMyTickets}=useGetMyTickets()
+  const {updateUserById}=useUpdateUserById()
+
+  const myTickets=useSelector(state=>state.TicketReducer)
+
+  console.log(user)
+  
+
+
+  useEffect(()=>{
+    getMyTickets()
+    getUserById(id)
+  },[])
 
   const handleChange = (e) => {
-    const { username, value } = e.target;
-    setFormData((prev) => ({ ...prev, [username]: value }));
+    setFormData({ 
+      ...formData, 
+      [e.target.name]: e.target.value 
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    console.log(formData)
+    updateUserById(id,formData);
     setFormData({
       username: "",
       email: "",
@@ -91,12 +81,12 @@ export default function EditAgentForm({ onSubmit }) {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             <div>
-              <h2 className="text-xl font-bold">agent id</h2>
+              <h2 className="text-xl font-bold">{user?._id}</h2>
               <div className="flex items-center gap-4 mt-2">
   
                 <img src="https://i.pravatar.cc/40?img=5" alt="Arlene McCoy" className="rounded-full" />
-                <span className="font-medium">Arlene McCoy</span>
-                <span className=" text-sm bg-gray-900 px-2 py-1 rounded-full">Role:<strong> Agent</strong></span>
+                <span className="font-medium">{user?.name}</span>
+                <span className=" text-sm bg-gray-900 px-2 py-1 rounded-full capitalize">Role:<strong>{user?.role}</strong></span>
   
                 <div className="  ml-auto flex items-center w-1/3 gap-3">
            
@@ -125,8 +115,8 @@ export default function EditAgentForm({ onSubmit }) {
   
             <div>
               <h3 className="text-md font-semibold mb-2 text-emerald-500">Active</h3>
-              <p><strong>Active Since:</strong> February 24, 2023</p>
-              <p>arlenemccoy@gmail.com</p>
+              <p><strong>Active Since:</strong>{new Date(user?.updatedAt).toLocaleTimeString()}</p>
+              <p>{user?.email}</p>
             </div>
   
             <div>
@@ -139,26 +129,26 @@ export default function EditAgentForm({ onSubmit }) {
                 <th># id</th>
                 <th>Date</th>
                 <th>Subject</th>
-                <th>Service</th>
+                {/* <th>Service</th> */}
                 <th >Created By</th><th>Status</th>
                 
               </tr>
             </thead>
             <tbody>
-              {tickets.map((ticket, index) => (
+              {myTickets.map((ticket, index) => (
                 <tr key={index} className="border-b  border-gray-800 h-10  ">
                  
                   <td>
-                    <Link to="/admin/view-ticket/123" className="cursor-pointer text-blue-400 underline">{ticket.number}</Link>
+                      <Link to={`/admin/view-ticket/${ticket?._id}`} className="cursor-pointer text-blue-400 underline">{ticket?._id}</Link>
                     </td>
-                  <td>{ticket.date}</td>
-                  <td>{ticket.subject}</td>
+                  <td>{new Date(ticket?.createdAt).toLocaleTimeString()}</td>
+                  <td>{ticket?.subject}</td>
                   
                 
-                  <td>{ticket.service}</td>
-                  <td > {ticket.assigned?ticket.assigned : "###"} </td>
+                  {/* <td>{ticket.service}</td> */}
+                  <td > {ticket?.createdBy?ticket?.createdBy : "###"} </td>
                   
-                  <td className={`${ticket.status=="pending"?`text-red-500`:`${ticket.status=='open'?`text-blue-500`:`text-green-500`}`} capitalize`}>{ticket.status}</td>
+                  <td className={`${ticket.status=="pending"?`text-red-500`:`${ticket.status=='open'?`text-blue-500`:`text-green-500`}`} capitalize`}>{ticket?.status}</td>
                 
                 </tr>
               ))}
@@ -212,7 +202,7 @@ export default function EditAgentForm({ onSubmit }) {
     transition={{ duration: 0.5, delay: 0.1 }}
     
     
-    onSubmit={handleSubmit} className="max-w-xl mx-auto bg-gray-900 p-6 rounded-xl shadow space-y-4">
+     className="max-w-xl mx-auto bg-gray-900 p-6 rounded-xl shadow space-y-4">
       <h2 className="text-xl font-semibold text-center">Edit Agent</h2>
 
 
@@ -222,7 +212,7 @@ export default function EditAgentForm({ onSubmit }) {
         <input
           type="text"
           name="name"
-          value={formData.username}
+          value={formData.name}
           onChange={handleChange}
           required
           className="mt-1 p-2 w-full border border-gray-400 rounded"
@@ -342,7 +332,9 @@ export default function EditAgentForm({ onSubmit }) {
         </div>
       </div> */}
 
-      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 cursor-pointer">
+      <button 
+      onClick={(e)=>handleSubmit(e)}
+       className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 cursor-pointer">
         Save Changes
       </button>
     </motion.form>

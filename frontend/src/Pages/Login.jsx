@@ -5,12 +5,14 @@ import {motion} from 'framer-motion'
 // import { useLogin } from '../Hooks/useLogin'
 import { Toaster } from 'react-hot-toast'
 import { useLogin } from '../Hooks/useLogin'
+import { useSelector } from 'react-redux'
 export function Login() {
 	const [isView,setIsView]=useState(false)
 	
-	const {Login,user,loading}=useLogin()
+	const {Login,loading}=useLogin()
+	
+	const user=useSelector(state=>state.userred)
 	console.log(user)
-
     
 	const [inputs,setInputs]=useState({
 		email:"",

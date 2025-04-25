@@ -2,44 +2,44 @@ import { useState } from "react"
 
 import {toast} from 'react-hot-toast'
 import { useDispatch } from "react-redux"
-import {addTicket, updateTicket} from '../../Store/Actions/ticketActions'
+import { deleteTicket, setTickets } from "../../Store/Actions/ticketActions"
+import { deleteNote } from "../../Store/Actions/notesActions"
 import { useNavigate } from "react-router-dom"
+
 
 // import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
-export function useUpdateTicket(){
+export function useDeleteNoteById(){
 
     
     const [loading,setLoading]=useState(false)
+    // const [tickets,setTickets]=useState([])
     
-    const dispatch=useDispatch()
+    const dispatch=useDispatch()  
     const navigate=useNavigate()
-    
-    
 
-const updateMyTicket=async(id,payload)=>{
-    console.log(payload)
-    
+const deleteNoteById=async(id)=>{
+
+  
 
     setLoading(true)
 
     try {
-        const res=await fetch(`/api/tickets/update/${id}`,{
-            method:"PUT",
+        const res=await fetch(`/api/notes/${id}`,{
+            method:"DELETE",
             headers:{
                 "Content-Type":"application/json"
-            },
-            body:JSON.stringify(payload)
+            }
         })
-        let {updatedTicket,success,message}=await res.json()
-        console.log(updatedTicket)
-        if(!updatedTicket || !success) throw new Error(message);
+        let {deletedNote,success,error}=await res.json()
+        if(!deletedNote || !success) throw new Error(error);
         
         else
-        {   
-            toast.success("Ticket Updated Successfully")
-            dispatch(updateTicket(updatedTicket))
-            navigate("/")
+        {  
+            // setTickets(myTickets);
+            dispatch(deleteNote(deletedNote))
+             navigate("/")
+            
             
             // localStorage.setItem("authInfo",JSON.stringify(user))
             
@@ -72,7 +72,7 @@ const updateMyTicket=async(id,payload)=>{
 }
 
 
-return{updateMyTicket,loading}
+return{deleteNoteById,loading}
 
 
 

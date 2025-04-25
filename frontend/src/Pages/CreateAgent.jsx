@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { useCreateUsert } from '../Hooks/Customers/useCreateUser';
 
 const CreateAgent = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: '',
-    role: '', // default/fixed role,
+    role: 'agent', // default/fixed role,
     department:''
   });
   
@@ -17,9 +18,12 @@ const CreateAgent = () => {
     });
   };
 
+  const {createUser}=useCreateUsert()
+
   const handleSubmit = (e) => {
+    
     e.preventDefault();
-    console.log('Submitting:', formData);
+    createUser(formData);
     // Call your API here to create the user
   };
 
@@ -31,8 +35,8 @@ const CreateAgent = () => {
         <label className="block mb-1 text-sm font-medium">Username</label>
         <input
           type="text"
-          name="username"
-          value={formData.username}
+          name="name"
+          value={formData.name}
           onChange={handleChange}
           className="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400"
           required

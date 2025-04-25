@@ -2,44 +2,35 @@ import { useState } from "react"
 
 import {toast} from 'react-hot-toast'
 import { useDispatch } from "react-redux"
-import {addTicket, updateTicket} from '../../Store/Actions/ticketActions'
-import { useNavigate } from "react-router-dom"
+import { setTickets } from "../../Store/Actions/ticketActions"
 
+import {setAllUsers} from '../../Store/Actions/userActions'
 // import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
-export function useUpdateTicket(){
+export function useGetAllUsers(){
 
     
     const [loading,setLoading]=useState(false)
     
-    const dispatch=useDispatch()
-    const navigate=useNavigate()
     
-    
+    const dispatch=useDispatch()  
 
-const updateMyTicket=async(id,payload)=>{
-    console.log(payload)
-    
+const getAllUsers=async()=>{
+
+  
 
     setLoading(true)
 
     try {
-        const res=await fetch(`/api/tickets/update/${id}`,{
-            method:"PUT",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(payload)
-        })
-        let {updatedTicket,success,message}=await res.json()
-        console.log(updatedTicket)
-        if(!updatedTicket || !success) throw new Error(message);
+        const res=await fetch("/api/auth/users")
+        let {users,success,error=""}=await res.json()
+        if(!users || !success) throw new Error(error);
         
         else
-        {   
-            toast.success("Ticket Updated Successfully")
-            dispatch(updateTicket(updatedTicket))
-            navigate("/")
+        {  
+            // setTickets(myTickets);
+            dispatch(setAllUsers(users))
+            
             
             // localStorage.setItem("authInfo",JSON.stringify(user))
             
@@ -72,7 +63,7 @@ const updateMyTicket=async(id,payload)=>{
 }
 
 
-return{updateMyTicket,loading}
+return{getAllUsers,loading}
 
 
 

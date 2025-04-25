@@ -7,6 +7,21 @@ function UserReducer(state=JSON.parse(localStorage.getItem("authInfo")) || null,
         case "SET_USER":{
             return state=payload
         }
+        case "ADD_USER":{
+            return [...state,payload]
+        }
+        case "UPDATE_USER":{
+            return {
+                ...state,
+                users: state.users.map(user =>
+                  user._id === payload._id
+                    ? { ...user, ...user.data }
+                    : user
+                ),
+              };
+        }
+
+        
         default:{
             return state
         }
@@ -14,10 +29,23 @@ function UserReducer(state=JSON.parse(localStorage.getItem("authInfo")) || null,
 
 }
 
+function AllUsersReducer(state=[],action){
+    const {type,payload}=action
+
+    switch(type){
+        case "SET_All_USERS":{
+            return state=payload
+        }
+        default:{
+            return state
+        }
+    }
+}
 
 
 
-function TicketReducer(state=null,action){
+
+function TicketReducer(state=JSON.parse(localStorage.getItem("my-tickets")) || [],action){
     const {type,payload}=action
 
     switch(type){
@@ -28,11 +56,11 @@ function TicketReducer(state=null,action){
             return [...state,payload]
         }
         case "UPDATE_TICKET":{
+            console.log(state)
             return {
                 ...state,
-                tickets: state.tickets.map(ticket =>
-                  ticket.id === action.payload.id
-                    ? { ...ticket, ...action.payload.data }
+                tickets: state.map(ticket =>
+                  ticket._id === payload._id ? { ...ticket, payload }
                     : ticket
                 ),
               };
@@ -40,7 +68,7 @@ function TicketReducer(state=null,action){
         case 'DELETE_TICKET':
             return {
               ...state,
-              tickets: state.tickets.filter(ticket => ticket.id !== action.payload.id),
+              tickets: state.tickets.filter(ticket => ticket._id !== payload._id),
             };
         default:{
             return state
@@ -82,12 +110,17 @@ function NotesReducer(state=[],action){
             return {
                 ...state,
                 notes: state.notes.map(note =>
-                  note.id === action.payload.id
-                    ? { ...note, ...action.payload.data }
+                  note.id === payload._id
+                    ? { ...note, ...payload.data }
                     : note
                 ),
               };
         }
+        case 'DELETE_NOTE':
+
+
+
+      return state=[]
         
         default:{
             return state    
@@ -104,5 +137,6 @@ function NotesReducer(state=[],action){
 export const allReducers=combineReducers({
     SelectedMenu,
     TicketReducer,UserReducer,
-    NotesReducer
+    NotesReducer,
+    AllUsersReducer
 })

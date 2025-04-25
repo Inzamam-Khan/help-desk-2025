@@ -1,42 +1,51 @@
 import { useState } from "react"
 
 import {toast} from 'react-hot-toast'
-
-
+import { useDispatch } from "react-redux"
+import {addTicket} from '../../Store/Actions/ticketActions'
+import { addUser } from "../../Store/Actions/userActions"
+import {useNavigate} from 'react-router-dom'
 
 // import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
-export function useLogin(){
+export function useCreateUsert(){
 
     
     const [loading,setLoading]=useState(false)
-    const [user,setUser]=useState(null)
+    // const [notes,setNotes]=useState(null)
+    const dispatch=useDispatch()
+    const navigate=useNavigate()
     
     
 
-const Login=async(payload)=>{
+const createUser=async(payload)=>{
+    
 
     setLoading(true)
 
     try {
-        const res=await fetch("/api/auth/login",{
+        const res=await fetch("/api/auth/signup",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
             },
             body:JSON.stringify(payload)
+
         })
-        let {user,error}=await res.json()
-        if(!user || error) throw new Error(error);
+        
+        let {user,success,message}=await res.json()
+
+        
+        if(!user || !success) throw new Error(message);
         
         else
-        {   toast.success(`Welcome ${user.name}`,{
-            duration: 6000,
-          })
-            setUser(user);
+        {   
+            toast.success("Ticket created Successfully")
+            dispatch(addUser(user))
+            navigate("/")
             
             
-            localStorage.setItem("authInfo",JSON.stringify(user))
+            // localStorage.setItem("authInfo",JSON.stringify(user))
             
         }
         
@@ -67,7 +76,7 @@ const Login=async(payload)=>{
 }
 
 
-return{Login,user,loading}
+return{createUser,loading}
 
 
 

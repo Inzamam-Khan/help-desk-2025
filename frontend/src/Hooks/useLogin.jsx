@@ -1,18 +1,27 @@
 import { useState } from "react"
 
-import {toast } from 'react-hot-toast'
-export function useSignup(){
+import {toast} from 'react-hot-toast'
+import { useDispatch } from "react-redux"
+import { setUser } from "../Store/Actions/userActions"
 
-    const [user,setUser]=useState(null)
+
+
+// import { toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+export function useLogin(){
+
+    
     const [loading,setLoading]=useState(false)
+    const dispatch=useDispatch()
+    
     
 
-const signup=async(payload)=>{
+const Login=async(payload)=>{
 
     setLoading(true)
 
     try {
-        const res=await fetch("/api/auth/signup",{
+        const res=await fetch("/api/auth/login",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
@@ -20,18 +29,21 @@ const signup=async(payload)=>{
             body:JSON.stringify(payload)
         })
         let {user,error}=await res.json()
-        if(!user || error) throw new Error(error)
+        if(!user || error) throw new Error(error);
+        
         else
-            {
-                toast.success(`Welcome ${user.name}`,{
-                    duration: 6000,
-                  })
-            setUser(user);
+        {   toast.success(`Welcome ${user.name}`,{
+            duration: 6000,
+          })
+          
+            dispatch(setUser(user))
             
             localStorage.setItem("authInfo",JSON.stringify(user))
+            
         }
         
     } catch (error) {
+        
         toast.error(error.message,{
             duration: 3000,
           },
@@ -43,8 +55,9 @@ const signup=async(payload)=>{
                 color: '#fff',
               },
               
-            })
-        console.log(error)
+            },
+          )
+      
         return error.message
         
     }
@@ -56,7 +69,7 @@ const signup=async(payload)=>{
 }
 
 
-return{signup,user,loading}
+return{Login,loading}
 
 
 

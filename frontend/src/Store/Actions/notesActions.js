@@ -19,3 +19,8 @@ export const updateNote=(payload)=>{
     }
 
 }
+
+export const deleteNote=(payload)=>{
+    return{type:"DELETE_NOTE",payload}
+
+}

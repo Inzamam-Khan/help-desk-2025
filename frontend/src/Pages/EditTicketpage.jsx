@@ -8,32 +8,33 @@ import { useGetTicketById } from '../Hooks/TicketsHooks/useGetTicketById';
 
 import { useDeleteTicketById } from '../Hooks/TicketsHooks/useDeleteTicketById';
 import { useUpdateTicket } from '../Hooks/TicketsHooks/useUpdateTicket';
-import { updateTicket } from '../Store/Actions/ticketActions';
+
 export default function EditTicketpage(){
   const dispatch = useDispatch();
 
   
   const {id}=useParams()
-  console.log(id)
+  
 
-  const [isEditOpen,setIsEditOpen]=useState(false)
-  const {getTicketById}=useGetTicketById()
+  const [isEditOpen,setIsEditOpen]=useState(true)
+
+  const {getTicketById,editTicket}=useGetTicketById()
 const {deleteTicketById} = useDeleteTicketById()
 
-  const {updateNote}=useUpdateTicket()
+  const {updateMyTicket}=useUpdateTicket()
 
   const ticket=useSelector(state=>state.TicketReducer)
   console.log(ticket)
 
 
   const [formData, setFormData] = useState({
-    title:ticket?.subject || "" ,
-    description: ticket?.description || '',
-    category: ticket?.category || '',
-    createdBy:ticket?.createdBy || "",
-    priority:ticket?.priority || "",
-    status:ticket?.status || "",
-    assignedTo:ticket?.assignedTo || "",
+    title:editTicket?.subject,
+    description: editTicket?.description ,
+    category: editTicket?.category ,
+    createdBy:editTicket?.createdBy?.name ,
+    priority:editTicket?.priority ,
+    status:editTicket?.status ,
+    assignedTo:editTicket?.assignedTo ,
   });
 
 
@@ -47,11 +48,11 @@ const {deleteTicketById} = useDeleteTicketById()
   useEffect(()=>{
    getTicketById(id)
     
-  },[])
+  },[id])
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateNote({id,formData });
+    updateMyTicket(id,formData);
     setFormData({ title: '', description: '', category: '',priority:"",status:"" });
   };
 
@@ -83,14 +84,8 @@ const {deleteTicketById} = useDeleteTicketById()
       </div>
       <div className="mb-3">
         <label className="block mb-1">Created By</label>
-        <p
-         
-          
-          className="w-full cursor-not-allowed  p-2 border-b border-gray-600 rounded"
-          
-        >
-          {ticket?.createdBy
-          }</p>
+        <p className="w-full cursor-not-allowed  p-2 border-b border-gray-600 rounded">
+          {ticket?.createdBy?.name}</p>
       </div>
 
       <div className="mb-3">
@@ -101,8 +96,7 @@ const {deleteTicketById} = useDeleteTicketById()
           className="w-full cursor-not-allowed border-b border-gray-600 p-2 rounded"
           
         >
-          {ticket?.description
-          }</p>
+          {ticket?.description}</p>
       </div>
 
 
@@ -114,8 +108,7 @@ const {deleteTicketById} = useDeleteTicketById()
          className="w-full border-b cursor-not-allowed border-gray-600 p-2 rounded"
          
        >
-         {ticket?.status
-         }</p>
+         {ticket?.status}</p>
       </div>
 
       <div className="mb-3">
@@ -126,10 +119,7 @@ const {deleteTicketById} = useDeleteTicketById()
           className="w-full border-b cursor-not-allowed border-gray-600 p-2 rounded"
           
         >
-          {ticket?.assignedTo
- 
-
-          }</p>
+          {ticket?.assignedTo}</p>
       </div>
 
 
@@ -142,10 +132,7 @@ const {deleteTicketById} = useDeleteTicketById()
          className="w-full border-b cursor-not-allowed border-gray-600 p-2 rounded"
          
        >
-         {ticket?.category
-
-
-         }</p>
+         {ticket?.category}</p>
       </div>
 
 
@@ -159,10 +146,7 @@ const {deleteTicketById} = useDeleteTicketById()
          className="w-full border-b cursor-not-allowed border-gray-600 p-2 rounded"
          
        >
-         {ticket?.priority
-
-
-         }</p>
+         {ticket?.priority}</p>
       </div>
 
 
@@ -268,8 +252,9 @@ className="w-1/2 mx-auto p-4 shadow rounded bg-gray-900">
       required
     >
 
-      <option value="">Hazer</option>
-      <option value="">John</option><option value="">Alvert</option>
+      <option value="hazer">Hazer</option>
+      <option value="john">John</option>
+      <option value="alvert">Alvert</option>
 
 
 

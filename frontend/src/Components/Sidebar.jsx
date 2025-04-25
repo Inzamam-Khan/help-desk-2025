@@ -6,6 +6,8 @@ import { Link, useParams } from "react-router-dom"
 import { CiLogin, CiLogout } from "react-icons/ci";
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenu } from "../Store/Actions/menuItemsActions"
+import { setUser } from "../Store/Actions/userActions"
+import { useLogout } from "../Hooks/useLogout"
 
 
 export default function Sidebar(){
@@ -16,6 +18,18 @@ export default function Sidebar(){
     const selected=useSelector(state=>state.SelectedMenu)
     const authUser=useSelector(state=>state.UserReducer)
     const isAdmin=authUser?.role=="admin"
+    const isAgent=authUser?.role=="agent"
+
+    console.log(isAdmin,isAgent)
+
+    const {logoutUser}=useLogout()
+
+
+    const handleLogout=()=>{
+        logoutUser()
+        localStorage.removeItem("authInfo")
+        dispatch(setUser(null))
+    }
    
   
     return(
@@ -38,53 +52,51 @@ export default function Sidebar(){
 
 
                 <nav className="mt-8  flex-grow">
-                    {SIDEBAR_ITEMS.map((item,index)=>
-                        
-                        // <Link to={item.link} key={index}>
-                       
-                        
-                        
+                    
+
+{SIDEBAR_ITEMS.map((item, index) => 
+// .filter(item => item?.roles?.includes(authUser?.role))
 
 
-                               ( <motion.div className={` flex items-center cursor-pointer p-2  border-red-500 text-sm font-medium 
-                                    rounded-lg hover:bg-gray-700  transition-colors mb-2 ${selected == item.link? `bg-gray-900`:``}`}
-                                    onClick={()=>dispatch(setMenu(item.link))}
-                                    >
-            
-                                            <span style={{color:item.color,minWidth:'20px',fontSize:"22px",}}>{item.icon}  </span>
-            
-                                            <AnimatePresence>
-                                               
-                                               {sidebarOpen && <motion.span className="ml-4  whitespace-nowrap"
-                                                initial={{opacity:0,width:0}}
-                                                animate={{opacity:1,width:1}}
-                                                exit={{opacity:0,width:0}}
-                                                transition={{duration:0.2,delay:0.3}}>
-                                                    {item.name}
-                                                </motion.span> }
+                                ( <motion.div className={`  flex items-center cursor-pointer p-2  border-red-500 text-sm font-medium 
+                                     rounded-lg hover:bg-gray-700  transition-colors mb-2 ${selected == item.link? `bg-gray-900`:``}`}
+                                     onClick={()=>dispatch(setMenu(item.link))}
+                                     >
+             
+                                             <span style={{color:item.color,minWidth:'20px',fontSize:"22px",}}>{item.icon}  </span>
+             
+                                             <AnimatePresence>
                                                 
-                                            </AnimatePresence>
-                                    </motion.div>
-)
-                        
+                                                {sidebarOpen && <motion.span className="ml-4  whitespace-nowrap"
+                                                 initial={{opacity:0,width:0}}
+                                                 animate={{opacity:1,width:1}}
+                                                 exit={{opacity:0,width:0}}
+                                                 transition={{duration:0.2,delay:0.3}}>
+                                                     {item.name}
+                                                 </motion.span> }
+                                                 
+                                             </AnimatePresence>
+                                     </motion.div>))}
+
                     
-                    
-                    
-                                   
-                    
-                    
-                    
-                        // </Link>
-                    )}
 
 <div className={` flex items-center cursor-pointer p-2  border-red-500 text-sm font-medium 
                                     rounded-lg hover:bg-gray-700  transition-colors mb-2 `}>
     {
         
         authUser? 
-        <CiLogout title="Logout" className="fill-gray-100"size={18}/>
+        
+        <CiLogout 
+        onClick={()=>handleLogout()}
+        title="Logout" className="fill-gray-100"size={18}/>
+        
+        
         :
-        <CiLogin title="Login" className=" fill-blue-500" size={18}/>
+
+        <Link to={'/login'}>
+            <CiLogin title="Login" className=" fill-blue-500" size={18}/>
+        </Link>
+        
 
     }
 

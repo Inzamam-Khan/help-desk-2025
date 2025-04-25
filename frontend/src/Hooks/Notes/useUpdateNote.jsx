@@ -3,7 +3,7 @@ import { updateNote } from "../../Store/Actions/notesActions"
 import {toast} from 'react-hot-toast'
 import { useDispatch } from "react-redux"
 import {addTicket, updateTicket} from '../../Store/Actions/ticketActions'
-
+import {useNavigate} from 'react-router-dom'
 // import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 export function useUpdateNote(){
@@ -11,6 +11,7 @@ export function useUpdateNote(){
     
     const [loading,setLoading]=useState(false)
     
+    const navigate=useNavigate()
     const dispatch=useDispatch()
     
     
@@ -36,6 +37,7 @@ const updateNote=async(id,payload)=>{
         {   
             toast.success("Ticket Updated Successfully")
             dispatch(updateNote(updatedNote))
+            navigate("/")
             
             
             // localStorage.setItem("authInfo",JSON.stringify(user))
