@@ -26,7 +26,7 @@ import { Toaster } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 function App() {
   const [count, setCount] = useState(0)
-  const authInfo=useSelector(state=>state.UserReducer)
+  const authUser=useSelector(state=>state.UserReducer)
 
  return(
 <div className="  bg-gray-900 text-gray-100 overflow-hidden h-full w-full">
@@ -35,13 +35,13 @@ function App() {
 <Routes>
 
 
-<Route path='/login' element={<Login/>}/> 
-<Route path='/signup' element={<Signup/>}/>
+<Route path='/login' element={authUser?<Navigate to="/"/>:<Login/>}/> 
+<Route path='/signup' element={authUser?<Navigate to="/"/>:<Signup/>}/>
 
-<Route path="/admin" element={<Adminpage/>}/>{/*home*/}
+<Route path="/admin" element={(authUser && authUser.role==='admin')?<Adminpage/>:<Navigate to="/"/>}/>{/*home*/}
 
 
-<Route path={`/`} element={<UserPage/>}/>{/*home*/}
+<Route path={`/`} element={authUser?.role=='customer'?<UserPage/>:<Navigate to="/"/>}/>{/*home*/}
 
 <Route path="/view-agent" element={<ViewAgent/>}/>{/*home*/}
 

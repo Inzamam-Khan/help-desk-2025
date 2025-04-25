@@ -53,12 +53,12 @@ export const SIDEBAR_ITEMS = [
         color: '#6ee7b7',
         link: 'settings'
     },
-    {
-        name: "Logout",
-        icon: <CiLogout />,
-        color: '#ef4444',
-        link: 'logout'
-    },
+    // {
+    //     name: "Logout",
+    //     icon: <CiLogout />,
+    //     color: '#ef4444',
+    //     link: 'logout'
+    // },
 ]
 
 export const SALES_DATA = [

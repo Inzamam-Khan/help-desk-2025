@@ -3,7 +3,7 @@ import { SIDEBAR_ITEMS } from "../Constants"
 import { AnimatePresence, motion } from "framer-motion"
 import { BiMenu } from "react-icons/bi"
 import { Link, useParams } from "react-router-dom"
-
+import { CiLogin, CiLogout } from "react-icons/ci";
 import { useSelector, useDispatch } from 'react-redux';
 import { setMenu } from "../Store/Actions/menuItemsActions"
 
@@ -76,6 +76,23 @@ export default function Sidebar(){
                     
                         // </Link>
                     )}
+
+<div className={` flex items-center cursor-pointer p-2  border-red-500 text-sm font-medium 
+                                    rounded-lg hover:bg-gray-700  transition-colors mb-2 `}>
+    {
+        
+        authUser? 
+        <CiLogout title="Logout" className="fill-gray-100"size={18}/>
+        :
+        <CiLogin title="Login" className=" fill-blue-500" size={18}/>
+
+    }
+
+
+</div>
+
+
+
                 </nav>
                
             </div>
